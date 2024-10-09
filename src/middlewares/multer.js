@@ -1,23 +1,22 @@
 import multer from 'multer';
-import { v4 as uuidv4 } from 'uuid'; // To generate a unique suffix
+import { v4 as uuidv4 } from 'uuid'; 
 
-// Set up multer for file storage and filtering
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/temp'); // Ensure this directory exists
+    cb(null, 'public/temp'); 
   },
   filename: function (req, file, cb) {
-    const uniqueSuffix = uuidv4(); // Generate a unique suffix
-    cb(null, file.fieldname + '-' + uniqueSuffix + '-' + file.originalname); // Include original filename for traceability
-  }
+    const uniqueSuffix = uuidv4(); 
+    cb(null, file.fieldname + '-' + uniqueSuffix + '-' + file.originalname);
+  } 
 });
 
-// File filter to allow PDF, JPG, JPEG, and PNG files
+
 const fileFilter = (req, file, cb) => {
-  // Allowed file extensions
+
   const filetypes = /pdf|jpg|jpeg|png/;
-  const extname = filetypes.test(file.originalname.toLowerCase()); // Check extension
-  const mimetype = filetypes.test(file.mimetype); // Check mimetype
+  const extname = filetypes.test(file.originalname.toLowerCase()); 
+  const mimetype = filetypes.test(file.mimetype); 
 
   if (extname && mimetype) {
     return cb(null, true);
@@ -29,6 +28,6 @@ const fileFilter = (req, file, cb) => {
 // Multer configuration
 export const upload = multer({
   storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // Limit file size to 5MB
+  limits: { fileSize: 5 * 1024 * 1024 }, 
   fileFilter: fileFilter,
 });

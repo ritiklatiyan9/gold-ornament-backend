@@ -3,7 +3,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 import { User } from "../models/userSchema.js";
 
-// Middleware to verify JWT token
+
 export const verifyJWT = asyncHandler(async (req, res, next) => {
   try {
     const token =
@@ -16,10 +16,8 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
 
     console.log("Token being verified:", token);
 
-    // Verify the token
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
-    // Fetch user and proceed
     const user = await User.findById(decodedToken?._id).select(
       "-password -refreshToken -confirmPassword"
     );
@@ -41,13 +39,12 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
   }
 });
 
-// Middleware to check if user is an admin
 export const isAdminLogin = asyncHandler(async (req, res, next) => {
-  // Check if the user exists and is an admin
+
   if (req.user?.role !== "admin") {
     throw new ApiError(401, "Unauthorized Request: Admin Access Required");
   }
 
-  // Call the next middleware if the user is an admin
+  
   next();
 });
